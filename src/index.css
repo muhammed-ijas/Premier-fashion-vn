@@ -1,0 +1,319 @@
+@import "tailwindcss";
+
+/* ============================================================
+   PREMIER FASHION — DESIGN SYSTEM  (v7)
+
+   Components never name a colour. A section declares what it is
+   (surface-light / surface-tint / surface-dark) and everything
+   inside — text, headings, rules, borders, buttons — reads the
+   right value from that surface.
+
+   Ground is navy for now. To retheme later, edit PALETTE plus the
+   hex values marked GROUND below (@theme and .surface-dark can't
+   read the palette vars — see the note in section 2).
+
+   Why the role utilities in section 6 are hand-written rather than
+   declared in @theme: a property declared as
+   --color-fg-muted: var(--fg-muted) computes at :root and inherits
+   that computed result, so a later surface override never reaches
+   it. Pointing the utility straight at var(--fg-muted) resolves at
+   the element instead, which is what makes surfaces work.
+   ============================================================ */
+
+/* ---------- 1. PALETTE ---------- */
+:root {
+  /* GROUND — navy */
+  --c-ground: #092B3A;
+  --c-ground-deep: #051C27;
+  --c-ground-mid: #123F4B;
+  --c-grad-1: #072433;
+  --c-grad-2: #0C3A4B;
+  --c-grad-3: #0A5A7F;
+
+  /* brand */
+  --c-blue: #0870B0;
+  --c-blue-deep: #065A8D;
+  --c-cyan: #2096CA;
+  --c-green: #55B52B;
+  --c-green-deep: #3F8A1E;
+  --c-green-light: #B4D298;
+  --c-lime: #8FBE13;
+
+  /* neutrals */
+  --c-paper: #F7F8F5;
+  --c-mist: #EEF2F1;
+  --c-charcoal: #263238;
+  --c-ink: #12191D;
+
+  --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ---------- 2. STATIC TOKENS ----------
+   Literal hex only. @theme cannot reference the palette vars above:
+   Tailwind needs a resolvable value at build time, and var() here
+   would also freeze at :root. Keep these in sync with PALETTE. */
+@theme {
+  /* GROUND */
+  --color-ground: #092B3A;
+  --color-ground-deep: #051C27;
+  --color-ground-mid: #123F4B;
+
+  --color-paper: #F7F8F5;
+  --color-mist: #EEF2F1;
+  --color-charcoal: #263238;
+  --color-ink: #12191D;
+  --color-brand-blue: #0870B0;
+  --color-brand-blue-deep: #065A8D;
+  --color-brand-cyan: #2096CA;
+  --color-brand-green: #55B52B;
+  --color-brand-green-deep: #3F8A1E;
+  --color-brand-green-light: #B4D298;
+  --color-brand-lime: #8FBE13;
+
+  /* Legacy names — unmigrated components keep working.
+     Delete this block once nothing references them. */
+  --color-navy: #092B3A;
+  --color-navy-deep: #051C27;
+  --color-navy-mid: #123F4B;
+  --color-teal-deep: #0A5A7F;
+  --color-premier-blue: #0870B0;
+  --color-premier-cyan: #2096CA;
+  --color-premier-cyan-light: #4FB0DC;
+  --color-premier-green: #55B52B;
+  --color-premier-green-light: #B4D298;
+  --color-light-green: #B4D298;
+  --color-paper-warm: #EEF2F1;
+  --color-burgundy: #3F8A1E;
+
+  --font-display: "Fraunces", "Iowan Old Style", Georgia, serif;
+  --font-sans: "Manrope", "Inter", -apple-system, sans-serif;
+}
+
+/* ---------- 3. DEFAULT SURFACE ROLES (light) ----------
+   Inside @layer base so surface classes can override them.
+   Unlayered :root rules would outrank @layer components. */
+@layer base {
+  :root {
+    --fg: #263238;
+    --fg-muted: rgb(38 50 56 / 0.80);
+    --fg-subtle: rgb(38 50 56 / 0.58);
+    --line: rgb(38 50 56 / 0.14);
+    --line-strong: rgb(38 50 56 / 0.28);
+    --accent: #3F8A1E;
+    --accent-soft: #55B52B;
+    --surface: #F7F8F5;
+    --surface-raised: #FFFFFF;
+
+    --btn-solid-bg: #092B3A;          /* GROUND */
+    --btn-solid-fg: #F7F8F5;
+    --btn-solid-bg-hover: #065A8D;
+    --btn-outline-fg: #263238;
+    --btn-outline-bd: rgb(38 50 56 / 0.28);
+    --btn-outline-bg-hover: #092B3A;  /* GROUND */
+    --btn-outline-fg-hover: #F7F8F5;
+  }
+
+  * { border-color: var(--line); }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background-color: var(--surface);
+    color: var(--fg);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    color: var(--fg);
+  }
+
+  ::selection { background-color: #092B3A; color: #F7F8F5; }  /* GROUND */
+  a, button { -webkit-tap-highlight-color: transparent; }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+/* ---------- 4. SURFACES ---------- */
+@layer components {
+  .surface-light,
+  .surface-tint,
+  .surface-dark,
+  .surface-dark-alt,
+  .surface-mesh {
+    position: relative;
+    isolation: isolate;
+    background-color: var(--surface);
+    color: var(--fg);
+  }
+
+  .surface-light { --surface: #F7F8F5; }
+
+  .surface-tint {
+    --surface: #EEF2F1;
+    --surface-raised: #F7F8F5;
+  }
+
+  .surface-dark,
+  .surface-dark-alt {
+    --fg: #F7F8F5;
+    --fg-muted: rgb(247 248 245 / 0.82);
+    --fg-subtle: rgb(247 248 245 / 0.62);
+    --line: rgb(247 248 245 / 0.16);
+    --line-strong: rgb(247 248 245 / 0.34);
+    --accent: #B4D298;
+    --accent-soft: #2096CA;
+    --surface: #092B3A;               /* GROUND */
+    --surface-raised: #123F4B;        /* GROUND */
+
+    --btn-solid-bg: #F7F8F5;
+    --btn-solid-fg: #092B3A;          /* GROUND */
+    --btn-solid-bg-hover: #B4D298;
+    --btn-outline-fg: #F7F8F5;
+    --btn-outline-bd: rgb(247 248 245 / 0.34);
+    --btn-outline-bg-hover: #F7F8F5;
+    --btn-outline-fg-hover: #092B3A;  /* GROUND */
+
+    background-image: linear-gradient(
+      135deg,
+      var(--c-grad-1) 0%,
+      var(--c-grad-2) 45%,
+      var(--c-grad-3) 100%
+    );
+  }
+
+  /* Reversed, so two dark sections in a row don't look identical */
+  .surface-dark-alt {
+    background-image: linear-gradient(
+      315deg,
+      var(--c-grad-1) 0%,
+      var(--c-grad-2) 45%,
+      var(--c-grad-3) 100%
+    );
+  }
+
+  .surface-dark::after,
+  .surface-dark-alt::after,
+  .surface-mesh::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background-image: var(--grain);
+    background-size: 180px 180px;
+    opacity: 0.28;                    /* 0.18 subtle — 0.40 heavy */
+    mix-blend-mode: overlay;
+  }
+
+  /* Light mesh alternative, if a hero should go pale */
+  .surface-mesh {
+    --surface: #F7F8F5;
+    background-image:
+      radial-gradient(48% 55% at 12% 18%, #DCE9D1 0%, transparent 62%),
+      radial-gradient(52% 48% at 78% 12%, #C8E3F0 0%, transparent 65%),
+      radial-gradient(45% 60% at 92% 72%, #AFD0E5 0%, transparent 68%),
+      radial-gradient(55% 50% at 38% 92%, #E7F0DF 0%, transparent 70%);
+  }
+  .surface-mesh::after { opacity: 0.22; mix-blend-mode: soft-light; }
+
+  /* Panel that inverts out of whichever surface it sits on */
+  .panel-invert {
+    background-color: var(--surface-raised);
+    color: var(--fg);
+  }
+  .surface-dark .panel-invert,
+  .surface-dark-alt .panel-invert {
+    --fg: #263238;
+    --fg-muted: rgb(38 50 56 / 0.78);
+    --line: rgb(38 50 56 / 0.14);
+    background-color: #F7F8F5;
+  }
+
+  /* ---------- 5. BUTTONS ---------- */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.875rem 1.75rem;
+    font-size: 0.95rem;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+  }
+  .btn-solid {
+    background-color: var(--btn-solid-bg);
+    color: var(--btn-solid-fg);
+  }
+  .btn-solid:hover { background-color: var(--btn-solid-bg-hover); }
+  .btn-outline {
+    border: 1px solid var(--btn-outline-bd);
+    color: var(--btn-outline-fg);
+  }
+  .btn-outline:hover {
+    background-color: var(--btn-outline-bg-hover);
+    color: var(--btn-outline-fg-hover);
+  }
+  .btn-ghost { color: var(--fg); padding-left: 0; padding-right: 0; }
+}
+
+/* ---------- 6. ROLE UTILITIES ----------
+   Hand-written on purpose — see the note at the top of this file. */
+@layer utilities {
+  .text-fg { color: var(--fg); }
+  .text-fg-muted { color: var(--fg-muted); }
+  .text-fg-subtle { color: var(--fg-subtle); }
+  .text-accent { color: var(--accent); }
+
+  .bg-surface { background-color: var(--surface); }
+  .bg-surface-raised { background-color: var(--surface-raised); }
+  .bg-accent { background-color: var(--accent); }
+  .bg-accent-soft { background-color: var(--accent-soft); }
+
+  .border-line { border-color: var(--line); }
+  .border-line-strong { border-color: var(--line-strong); }
+  .divide-line > * + * { border-color: var(--line); }
+
+  .rule { background-color: var(--accent); }
+  .text-balance { text-wrap: balance; }
+}
+
+/* --------------------------------------------------------
+   MIGRATION MAP — old class → new class
+
+   SECTIONS
+     bg-navy ............... surface-dark
+     bg-paper .............. surface-light
+     bg-paper-warm ......... surface-tint
+
+   TEXT (drop the colour — the surface supplies it)
+     text-navy / text-paper ............ text-fg  (or nothing)
+     text-charcoal/80 / text-paper/70 .. text-fg-muted
+     text-charcoal/50 / text-paper/60 .. text-fg-subtle
+
+   LINES AND ACCENTS
+     border-navy/10 / border-paper/10 .. border-line
+     bg-premier-green / bg-premier-cyan  rule
+     text-premier-green ................ text-accent
+
+   BUTTONS
+     variant="primary" / "light" ....... btn btn-solid
+     variant="secondary" ............... btn btn-outline
+     variant="ghost" ................... btn btn-ghost
+
+   RETHEMING LATER
+     Change PALETTE, then every hex marked GROUND in sections 2, 3
+     and 4. Nine values total.
+   -------------------------------------------------------- */
