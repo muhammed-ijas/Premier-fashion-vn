@@ -1,44 +1,59 @@
+import { Link } from "react-router-dom";
+import clsx from "clsx";
 import Container from "./Container";
 import Reveal from "./Reveal";
-import clsx from "clsx";
-
-const accentClass = {
-  green: "bg-premier-green",
-  cyan: "bg-premier-cyan",
-  burgundy: "bg-burgundy",
-};
+import { hasMedia } from "../data/media";
 
 /**
- * PageHero
- * Shared interior-page header: dark navy field, kicker + large serif title,
- * optional supporting line. Keeps every non-Home page tied to one system.
+ * PageHero — interior page header.
+ * Photograph with a flat dark overlay, uppercase white title, breadcrumb.
+ * Pass the image from data/media.js: image={heroes.about}
+ * compact: shorter than the full-screen home hero (default true for
+ * interior pages — they carry content, not a landing statement).
  */
-export default function PageHero({ kicker, title, lede, accent = "green" }) {
+export default function PageHero({
+  kicker,
+  title,
+  lede,
+  image,
+  breadcrumb,
+  compact = false,
+}) {
   return (
-    <section className="relative overflow-hidden bg-navy pb-20 pt-40 md:pb-28 md:pt-48">
-      <div
-        className={clsx(
-          "pointer-events-none absolute -right-24 -top-24 h-[420px] w-[420px] rounded-full opacity-[0.15] blur-3xl",
-          accentClass[accent]
-        )}
-      />
-      <Container className="relative">
+    <section
+      className={clsx(
+        "surface-media page-header overflow-hidden",
+        compact && "page-header-compact",
+        !hasMedia(image) && "no-media"
+      )}
+      style={hasMedia(image) ? { backgroundImage: `url(${image})` } : undefined}
+    >
+      <Container className="w-full">
         {kicker && (
           <Reveal as="fade">
-            <div className="mb-5 flex items-center gap-3 text-sm text-paper/60">
-              <span className="h-px w-8 bg-premier-cyan" />
-              {kicker}
-            </div>
+            <p className="eyebrow mb-5">{kicker}</p>
           </Reveal>
         )}
+
         <Reveal as="up" delay={0.05}>
-          <h1 className="max-w-3xl text-balance font-display text-[2.75rem] leading-[1.05] text-paper md:text-[4rem]">
-            {title}
-          </h1>
+          <h1 className="hero-title max-w-3xl text-balance">{title}</h1>
         </Reveal>
+
         {lede && (
           <Reveal as="up" delay={0.1}>
-            <p className="mt-6 max-w-xl text-[1.05rem] leading-relaxed text-paper/70">{lede}</p>
+            <p className="mt-5 max-w-xl text-[0.92rem] leading-[1.7] text-fg-muted">
+              {lede}
+            </p>
+          </Reveal>
+        )}
+
+        {breadcrumb && (
+          <Reveal as="up" delay={0.15}>
+            <nav aria-label="Breadcrumb" className="breadcrumb mt-6">
+              <Link to="/">Home</Link>
+              <span aria-hidden="true">/</span>
+              <span aria-current="page">{breadcrumb}</span>
+            </nav>
           </Reveal>
         )}
       </Container>

@@ -1,11 +1,13 @@
-import { Quote, MapPin, Award, TrendingUp } from "lucide-react";
+import { useRef } from "react";
+import { motion, useScroll, useSpring } from "framer-motion";
+import { Quote, MapPin, TrendingUp } from "lucide-react";
 import PageHero from "../components/PageHero";
+import clsx from "clsx";
 import Container from "../components/Container";
 import Reveal from "../components/Reveal";
 import Stagger from "../components/Stagger";
 import SectionHeading from "../components/SectionHeading";
 import ImageReveal from "../components/ImageReveal";
-import Button from "../components/Button";
 import CTASection from "../components/home/CTASection";
 import {
   about,
@@ -18,10 +20,10 @@ import {
   additionalPresence,
   company,
 } from "../data/company";
+import { heroes, about as aboutMedia, brands } from "../data/media";
 
-// "Our Brands" has no source assets/names yet — do not invent brand names.
-// Replace this array with real logo imports (e.g. import logo from "/brands/x.svg")
-// once the client supplies brand marks.
+
+// "Our Brands" has no source names or artwork yet — placeholders only.
 const brandSlots = Array.from({ length: 6 }, (_, i) => i + 1);
 
 const marketShareCards = [
@@ -31,84 +33,122 @@ const marketShareCards = [
 ];
 const targetForecastPoint = marketShare.points[3];
 
+const categories = [
+  "Bottoms",
+  "Jackets",
+  "Tops",
+  "T-Shirts",
+  "Polo",
+  "Shirts",
+  "Dresses",
+  "Denims",
+];
+
 export default function About() {
   const locationCount = offices.length + additionalPresence.length;
+
+  // timeline line draws itself as the section scrolls through the viewport
+  const timelineRef = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: timelineRef,
+    offset: ["start 0.8", "end 0.6"],
+  });
+  const lineScale = useSpring(scrollYProgress, {
+    stiffness: 90,
+    damping: 24,
+    restDelta: 0.001,
+  });
+
+  const stats = [
+    { value: company.founded, label: "Founded" },
+    { value: locationCount, label: "Locations" },
+    { value: "18+", label: "Years" },
+  ];
 
   return (
     <>
       <PageHero
         kicker="About Premier Fashion"
-        title="Two decades of full-service apparel manufacturing."
+        title="Two decades of full-service apparel manufacturing"
         lede="From a single Hong Kong trading office in 2005 to a full-service vendor spanning design, sourcing and production across Asia."
+        image={heroes.about}
+        breadcrumb="About Us"
       />
 
       {/* 1 — WHO WE ARE */}
-      <section className="bg-paper py-24 md:py-32">
-        <Container className="grid grid-cols-1 items-center gap-16 lg:grid-cols-2">
-          <Reveal as="right">
+      <section className="surface-light py-20 md:py-28">
+        <Container className="grid grid-cols-1 items-center gap-14 lg:grid-cols-2 lg:gap-16">
+          <Reveal as="left" className="order-1 lg:order-2">
             <ImageReveal
+              src={aboutMedia.overview}
               aspect="aspect-[5/4]"
-              label="Premier Fashion — Ho Chi Minh City head office / production floor"
-              className="border border-navy/10"
+              alt="Premier Fashion facility"
+              label="Ho Chi Minh City head office / production floor"
+              className="border border-line"
             />
           </Reveal>
-          <div>
-            <SectionHeading kicker="Who we are" title="A one-stop shop, built over two decades." accent="green" />
+
+          <div className="order-2 lg:order-1">
+            <SectionHeading kicker="Who we are" title="A one-stop shop, built over two decades" />
+
             <Reveal as="up" delay={0.1}>
-              <p className="mt-6 max-w-lg text-[1.02rem] leading-relaxed text-charcoal/80">{about.intro}</p>
+              <p className="mt-6 max-w-lg text-[0.9rem] leading-[1.8] text-fg-muted">
+                {about.intro}
+              </p>
             </Reveal>
             <Reveal as="up" delay={0.16}>
-              <p className="mt-4 max-w-lg text-[1.02rem] leading-relaxed text-charcoal/80">{about.today}</p>
+              <p className="mt-4 max-w-lg text-[0.9rem] leading-[1.8] text-fg-muted">
+                {about.today}
+              </p>
             </Reveal>
 
+            {/* three across on every screen, including phones */}
             <Reveal as="up" delay={0.22}>
-              <div className="mt-10 flex flex-wrap gap-10 border-t border-navy/10 pt-8">
-                <div>
-                  <p className="font-display text-4xl text-navy">{company.founded}</p>
-                  <p className="mt-1 text-xs uppercase tracking-wide text-charcoal/50">Founded</p>
-                </div>
-                <div>
-                  <p className="font-display text-4xl text-navy">{locationCount}</p>
-                  <p className="mt-1 text-xs uppercase tracking-wide text-charcoal/50">
-                    Locations worldwide
-                  </p>
-                </div>
-                <div>
-                  <p className="font-display text-4xl text-navy">18+</p>
-                  <p className="mt-1 text-xs uppercase tracking-wide text-charcoal/50">
-                    Years in business
-                  </p>
-                </div>
-              </div>
+              <dl className="mt-9 grid grid-cols-3 gap-4 border-t border-line pt-6">
+                {stats.map((stat) => (
+                  <div key={stat.label}>
+                    <dd className="text-xl font-bold leading-none text-blue md:text-2xl">
+                      {stat.value}
+                    </dd>
+                    <dt className="mt-2 text-[0.6rem] font-medium uppercase tracking-[0.1em] text-fg-subtle md:text-[0.65rem]">
+                      {stat.label}
+                    </dt>
+                  </div>
+                ))}
+              </dl>
             </Reveal>
           </div>
         </Container>
       </section>
 
       {/* 2 — CEO MESSAGE */}
-      <section className="relative overflow-hidden bg-navy py-24 md:py-32">
-        <div className="pointer-events-none absolute -left-24 -top-24 h-[420px] w-[420px] rounded-full bg-premier-cyan/15 blur-3xl" />
-        <Container className="relative grid grid-cols-1 items-center gap-16 lg:grid-cols-[0.8fr_1.2fr]">
-          <Reveal as="right">
+      <section className="surface-blue py-20 md:py-28">
+        <Container className="grid grid-cols-1 items-center gap-12 lg:grid-cols-[0.55fr_1.45fr] lg:gap-16">
+          <Reveal as="right" className="mx-auto w-full max-w-[260px] lg:mx-0 lg:max-w-[300px]">
             <ImageReveal
+              src={aboutMedia.ceoPortrait}
               aspect="aspect-[4/5]"
-              label="Portrait — Mr. Mohammad Jamaluddin, Founder & CEO"
-              className="border border-paper/10"
+              alt={`${company.founder}, ${company.founderTitle}`}
+              label="Portrait — Founder & CEO"
+              className="border border-line"
             />
           </Reveal>
+
           <div>
-            <Quote className="h-9 w-9 text-premier-cyan" strokeWidth={1.5} />
+            <Quote className="h-7 w-7 text-green" strokeWidth={1.75} />
             <Reveal as="up" delay={0.08}>
-              <p className="mt-6 text-balance font-display text-[1.7rem] leading-[1.3] text-paper md:text-[2.1rem]">
+              <p className="mt-5 text-balance text-[1.2rem] font-medium leading-[1.55] text-white md:text-[1.45rem]">
                 {about.ceoMessage.body[0]}
               </p>
             </Reveal>
             <Reveal as="up" delay={0.16}>
-              <div className="mt-8 flex items-center gap-4">
-                <span className="h-px w-10 bg-premier-cyan" />
+              <div className="mt-7 flex items-center gap-4">
+                <span className="h-[2px] w-10 bg-green" />
                 <div>
-                  <p className="font-display text-lg text-paper">{company.founder}</p>
-                  <p className="text-sm text-paper/55">{company.founderTitle}</p>
+                  <p className="text-[0.9rem] font-semibold uppercase tracking-[0.06em] text-white">
+                    {company.founder}
+                  </p>
+                  <p className="mt-1 text-[0.8rem] text-fg-muted">{company.founderTitle}</p>
                 </div>
               </div>
             </Reveal>
@@ -116,96 +156,160 @@ export default function About() {
         </Container>
       </section>
 
-      {/* 3 — PREMIER FASHION GROUP */}
-      <section className="bg-paper-warm py-24 md:py-32">
+      {/* 3 — FULL-SERVICE VENDOR */}
+      <section className="surface-tint py-20 md:py-24">
         <Container>
-          <Reveal as="up" className="mx-auto max-w-3xl text-center">
-            <div className="mb-6 flex items-center justify-center gap-3 text-sm text-charcoal/60">
-              <span className="h-px w-8 bg-premier-green" />
-              A full-service vendor
-              <span className="h-px w-8 bg-premier-green" />
-            </div>
-            <p className="text-balance font-display text-[1.6rem] leading-[1.45] text-navy md:text-[1.95rem]">
-              {about.ceoMessage.body[1]}
-            </p>
-          </Reveal>
+          <div className="grid grid-cols-1 gap-10 lg:grid-cols-[0.85fr_1.15fr] lg:items-start lg:gap-16">
+            <Reveal as="right">
+              <p className="eyebrow mb-4">A full-service vendor</p>
+              <h2 className="section-title text-balance">
+                Trusted for quality and value
+              </h2>
+              <div className="mt-6 flex items-center gap-4">
+                <span className="text-4xl font-bold leading-none text-green md:text-5xl">18+</span>
+                <span className="max-w-[9rem] text-[0.72rem] font-medium uppercase leading-snug tracking-[0.08em] text-fg-subtle">
+                  years in business
+                </span>
+              </div>
+            </Reveal>
+
+            <Reveal as="left" delay={0.1}>
+              <blockquote className="relative border-l-2 border-green bg-white p-7 md:p-9">
+                <Quote
+                  className="absolute right-6 top-6 h-8 w-8 text-green/25"
+                  strokeWidth={1.75}
+                  aria-hidden="true"
+                />
+                <p className="relative text-[0.95rem] leading-[1.85] text-fg-muted md:text-[1.02rem]">
+                  {about.ceoMessage.body[1]}
+                </p>
+              </blockquote>
+
+
+            </Reveal>
+          </div>
         </Container>
       </section>
 
+
+
       {/* 4 — HISTORY TIMELINE */}
-      <section className="bg-paper py-24 md:py-32">
+      {/* 4 — HISTORY TIMELINE */}
+      <section className="surface-light py-20 md:py-28">
         <Container>
           <SectionHeading
             kicker="Our history"
-            title="Two decades of continuous advancement."
-            accent="cyan"
+            title="Two decades of continuous advancement"
             lede="From a single trading office in Hong Kong to a global network of design, sourcing and production facilities."
           />
 
-          <Stagger className="mt-16 border-t border-navy/10">
-            {history.map((entry) => (
-              <Stagger.Item
-                key={entry.year}
-                as="up"
-                className="grid grid-cols-1 gap-4 border-b border-navy/10 py-8 md:grid-cols-[140px_1fr]"
-              >
-                <p className="font-display text-3xl text-premier-green md:text-4xl">{entry.year}</p>
-                <div>
-                  <h3 className="font-display text-xl text-navy">{entry.title}</h3>
-                  <p className="mt-2 max-w-2xl text-[0.98rem] leading-relaxed text-charcoal/75">
+          <div ref={timelineRef} className="relative mt-14">
+            {/* wave that draws itself down the centre gap */}
+            {/* phones: straight line down the left edge */}
+            <div aria-hidden="true" className="absolute left-0 top-0 h-full w-[2px] bg-hairline md:hidden">
+              <motion.span
+                style={{ scaleY: lineScale }}
+                className="absolute inset-0 block origin-top bg-green"
+              />
+            </div>
+            <svg
+              aria-hidden="true"
+              className="pointer-events-none absolute left-1/2 top-0 hidden h-full w-16 -translate-x-1/2 md:block"
+              viewBox="0 0 40 1000"
+              preserveAspectRatio="none"
+              fill="none"
+            >
+              <path
+                d="M20 0 C 2 90, 38 180, 20 270 S 2 450, 20 540 S 38 720, 20 810 S 2 950, 20 1000"
+                stroke="var(--line)"
+                strokeWidth="2"
+                strokeDasharray="1 9"
+                strokeLinecap="round"
+              />
+              <motion.path
+                d="M20 0 C 2 90, 38 180, 20 270 S 2 450, 20 540 S 38 720, 20 810 S 2 950, 20 1000"
+                stroke="#7CB715"
+                strokeWidth="2"
+                strokeLinecap="round"
+                style={{ pathLength: lineScale }}
+              />
+            </svg>
+
+            <Stagger className="grid grid-cols-1 gap-x-24 gap-y-10 pl-6 md:grid-cols-2 md:pl-0">
+              {history.map((entry, i) => (
+                <Stagger.Item
+                  key={entry.year}
+                  as={i % 2 === 0 ? "right" : "left"}
+                  className="relative"
+                >
+                  <p className="text-lg font-bold leading-none text-blue md:text-xl">
+                    {entry.year}
+                  </p>
+                  <h3 className="card-title mt-2">{entry.title}</h3>
+                  <p className="mt-2 text-[0.82rem] leading-[1.75] text-fg-muted">
                     {entry.description}
                   </p>
-                </div>
-              </Stagger.Item>
-            ))}
-          </Stagger>
+                </Stagger.Item>
+              ))}
+            </Stagger>
+          </div>
         </Container>
       </section>
 
+
+
       {/* 5 — OUR BRANDS */}
-      <section className="border-y border-navy/10 bg-paper-warm py-20 md:py-28">
+      {/* 5 — OUR BRANDS */}
+      <section className="surface-tint py-16 md:py-20">
         <Container>
           <SectionHeading
             kicker="Our brands"
-            title="Trusted brand partners."
-            accent="burgundy"
+            title="Trusted brand partners"
             align="center"
+            plainKicker
           />
-          <Reveal as="fade" delay={0.1}>
-            <p className="mx-auto mt-4 max-w-xl text-center text-sm text-charcoal/50">
-              Brand logo placeholders below — replace each with the actual client/brand
-              logo once artwork is supplied. Do not populate with invented brand names.
-            </p>
-          </Reveal>
-          <Stagger className="mt-12 grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-6">
-            {brandSlots.map((slot) => (
-              <Stagger.Item key={slot} as="scale">
-                <ImageReveal
-                  aspect="aspect-[3/2]"
-                  label={`Brand logo ${slot}`}
-                  className="border border-navy/10 bg-paper"
-                />
-              </Stagger.Item>
-            ))}
-          </Stagger>
+        </Container>
+
+        <Container className="mt-10">
+          <div className="marquee">
+            <div className="marquee-track">
+              {[...brands, ...brands].map((brand, i) => (
+                <div
+                  key={`${brand.logo}-${i}`}
+                  className="mx-2.5 flex h-24 w-52 shrink-0 items-center justify-center border border-line bg-white px-6 transition-colors duration-300 hover:border-green md:h-28 md:w-60"
+                >
+                  <img
+                    src={brand.logo}
+                    alt={
+                      brand.name === "Brand partner"
+                        ? `Brand partner ${(i % brands.length) + 1}`
+                        : brand.name
+                    }
+                    loading="lazy"
+                    aria-hidden={i >= brands.length}
+                    className="max-h-[70%] max-w-full object-contain"
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
         </Container>
       </section>
 
       {/* 6 — CHINA SOURCING */}
-      <section className="relative overflow-hidden bg-navy py-24 text-paper md:py-32">
-        <div className="pointer-events-none absolute -right-24 top-1/4 h-[420px] w-[420px] rounded-full bg-premier-green/15 blur-3xl" />
-        <Container className="relative grid grid-cols-1 gap-16 lg:grid-cols-2">
+      <section className="surface-blue py-20 md:py-28">
+        <Container className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-16">
           <div>
             <SectionHeading
               kicker="China — Sourcing"
-              title="Fabric & trims, headquartered at the source."
-              accent="cyan"
-              tone="light"
+              title="Fabric & trims, headquartered at the source"
               lede={mission.intro}
             />
-            <Reveal as="up" delay={0.1}>
-              <p className="mt-6 text-sm uppercase tracking-wide text-paper/50">Lead time</p>
-              <p className="font-display text-3xl text-paper">60–90 days</p>
+            <Reveal as="up" delay={0.1} className="mt-8 border-t border-line pt-6">
+              <p className="text-[0.62rem] font-medium uppercase tracking-[0.1em] text-fg-subtle">
+                Lead time
+              </p>
+              <p className="mt-2 text-2xl font-bold text-white md:text-3xl">60–90 days</p>
             </Reveal>
           </div>
 
@@ -214,7 +318,7 @@ export default function About() {
               <Stagger.Item
                 key={i}
                 as="left"
-                className="border-l-2 border-premier-cyan/50 pl-5 text-[0.98rem] leading-relaxed text-paper/75"
+                className="border-l-2 border-green pl-5 text-[0.82rem] leading-[1.8] text-fg-muted"
               >
                 {point}
               </Stagger.Item>
@@ -222,26 +326,36 @@ export default function About() {
           </Stagger>
         </Container>
 
-        <Container className="relative mt-16">
+        <Container className="mt-14">
           <Reveal as="up">
             <ImageReveal
+              src={aboutMedia.chinaSourcing}
               aspect="aspect-[21/9]"
-              label="Premier Exim China — Keqiao, Shaoxing fabric & trims sourcing office"
-              className="border border-paper/10"
+              alt="Premier Exim China — Keqiao, Shaoxing"
+              label="Keqiao, Shaoxing fabric & trims sourcing"
+              className="border border-line"
             />
           </Reveal>
         </Container>
       </section>
 
       {/* 7 — MISSION */}
-      <section className="bg-paper py-24 md:py-32">
+      <section className="surface-light py-20 md:py-28">
         <Container>
-          <SectionHeading kicker="Our mission" title="Five commitments, held everywhere we operate." accent="green" />
-          <Stagger className="mt-14 grid grid-cols-1 gap-px overflow-hidden border border-navy/10 bg-navy/10 sm:grid-cols-2 lg:grid-cols-5">
-            {mission.pillars.map((pillar) => (
-              <Stagger.Item key={pillar.title} as="up" className="bg-paper p-7">
-                <h3 className="font-display text-lg text-navy">{pillar.title}</h3>
-                <p className="mt-3 text-sm leading-relaxed text-charcoal/70">{pillar.description}</p>
+          <SectionHeading
+            kicker="Our mission"
+            title="Five commitments, held everywhere we operate"
+          />
+          <Stagger className="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-5">
+            {mission.pillars.map((pillar, i) => (
+              <Stagger.Item key={pillar.title} as="up" className="h-full">
+                <article className="card h-full">
+                  <span className="card-index">0{i + 1}</span>
+                  <h3 className="card-title pr-8">{pillar.title}</h3>
+                  <p className="mt-3 text-[0.82rem] leading-[1.75] text-fg-muted">
+                    {pillar.description}
+                  </p>
+                </article>
               </Stagger.Item>
             ))}
           </Stagger>
@@ -249,22 +363,28 @@ export default function About() {
       </section>
 
       {/* 8 — DESIGN: KEY INITIATIVES */}
-      <section className="bg-paper-warm py-24 md:py-32">
-        <Container className="grid grid-cols-1 gap-16 lg:grid-cols-2">
-          <Reveal as="right" className="order-2 lg:order-1">
-            <ImageReveal
-              aspect="aspect-[4/5]"
-              label="Premier design studio — West/East collaboration (US, Vietnam, India, China)"
-              className="border border-navy/10"
-            />
-          </Reveal>
-          <div className="order-1 lg:order-2">
-            <SectionHeading kicker="Design" title="Key initiatives." accent="burgundy" />
-            <Stagger className="mt-8 space-y-6">
+      <section className="surface-tint py-20 md:py-28">
+        <Container>
+          <SectionHeading kicker="Design" title="Key initiatives" />
+
+          <div className="mt-12 grid grid-cols-1 gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16">
+            <Reveal as="right" className="mx-auto w-full max-w-[340px] lg:mx-0 lg:max-w-none">
+              <ImageReveal
+                src={aboutMedia.designStudio}
+                aspect="aspect-[4/5]"
+                alt="Premier design studio"
+                label="Design studio — US, Vietnam, India, China"
+                className="border border-line"
+              />
+            </Reveal>
+
+            <Stagger className="grid grid-cols-1 gap-5 sm:grid-cols-2">
               {designInitiatives.points.map((point, i) => (
-                <Stagger.Item key={i} as="up" className="flex gap-4">
-                  <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-burgundy" />
-                  <p className="text-[0.98rem] leading-relaxed text-charcoal/80">{point}</p>
+                <Stagger.Item key={i} as="up" className="h-full">
+                  <article className="card h-full">
+                    <span className="card-index">0{i + 1}</span>
+                    <p className="pr-8 text-[0.82rem] leading-[1.8] text-fg-muted">{point}</p>
+                  </article>
                 </Stagger.Item>
               ))}
             </Stagger>
@@ -273,114 +393,88 @@ export default function About() {
       </section>
 
       {/* 9 — PRODUCT CATEGORY MIX */}
-      <section className="bg-navy py-24 text-paper md:py-32">
-        <Container>
-          <div className="grid grid-cols-1 gap-16 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
-            <div>
-              <SectionHeading
-                kicker="Product category mix"
-                title="A diverse range, made under one roof."
-                accent="cyan"
-                tone="light"
-              />
-              <Reveal as="up" delay={0.12} className="mt-10 border-t border-paper/15 pt-8">
-                <p className="font-display text-5xl text-paper">40%</p>
-                <p className="mt-2 max-w-xs text-sm leading-relaxed text-paper/60">
-                  of turnover is business booked on Premier&rsquo;s own design.
-                </p>
-              </Reveal>
-            </div>
+      <section className="surface-blue py-20 md:py-28">
+        <Container className="grid grid-cols-1 gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:items-start lg:gap-16">
+          <div>
+            <SectionHeading
+              kicker="Product category mix"
+              title="A diverse range, made under one roof"
+            />
+            <Reveal as="up" delay={0.12} className="mt-8 border-t border-line pt-6">
+              <p className="text-3xl font-bold leading-none text-green md:text-4xl">40%</p>
+              <p className="mt-3 max-w-xs text-[0.82rem] leading-[1.75] text-fg-muted">
+                of turnover is business booked on Premier&rsquo;s own design.
+              </p>
+            </Reveal>
+          </div>
 
-            <div>
-              <Stagger className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-                {["Bottoms", "Jackets", "Tops", "T-Shirts", "Polo", "Shirts", "Dresses", "Denims"].map(
-                  (cat) => (
-                    <Stagger.Item
-                      key={cat}
-                      as="scale"
-                      className="border border-paper/15 px-4 py-6 text-center font-display text-base text-paper/85"
-                    >
-                      {cat}
-                    </Stagger.Item>
-                  )
-                )}
-              </Stagger>
+          <div>
+            <Stagger className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+              {categories.map((cat) => (
+                <Stagger.Item
+                  key={cat}
+                  as="scale"
+                  className="border border-line px-3 py-4 text-center text-[0.72rem] font-semibold uppercase tracking-[0.06em] text-white transition-colors duration-300 hover:border-green"
+                >
+                  {cat}
+                </Stagger.Item>
+              ))}
+            </Stagger>
 
-              <Stagger className="mt-8 space-y-4">
-                {productCategoryMix.points
-                  .filter((p) => !p.includes("40%"))
-                  .map((point, i) => (
-                    <Stagger.Item key={i} as="up" className="text-[0.95rem] leading-relaxed text-paper/65">
-                      {point}
-                    </Stagger.Item>
-                  ))}
-              </Stagger>
-            </div>
+            <Stagger className="mt-8 space-y-4">
+              {productCategoryMix.points
+                .filter((p) => !p.includes("40%"))
+                .map((point, i) => (
+                  <Stagger.Item
+                    key={i}
+                    as="up"
+                    className="text-[0.82rem] leading-[1.8] text-fg-muted"
+                  >
+                    {point}
+                  </Stagger.Item>
+                ))}
+            </Stagger>
           </div>
         </Container>
       </section>
 
-      {/* 10 — MARKET SHARE / GLOBAL CAPACITY */}
-      <section className="bg-paper py-24 md:py-32">
+      {/* 10 — GLOBAL CAPACITY */}
+      <section className="surface-sky py-20 md:py-28">
         <Container>
           <SectionHeading
             kicker="Global capacity"
-            title="Expanding where the opportunity is."
-            accent="green"
+            title="Expanding where the opportunity is"
+            tone="ink"
           />
 
-          <Stagger className="mt-14 grid grid-cols-1 gap-px overflow-hidden border border-navy/10 bg-navy/10 md:grid-cols-3">
+          <Stagger className="mt-12 grid grid-cols-1 gap-5 md:grid-cols-3">
             {marketShareCards.map((card) => (
-              <Stagger.Item key={card.region} as="up" className="bg-paper p-8">
-                <div className="mb-4 flex items-center gap-2 text-premier-green">
-                  <MapPin className="h-4 w-4" strokeWidth={1.75} />
-                  <h3 className="font-display text-lg text-navy">{card.region}</h3>
-                </div>
-                <p className="text-sm leading-relaxed text-charcoal/75">{card.point}</p>
+              <Stagger.Item key={card.region} as="up" className="h-full">
+                <article className="card h-full">
+                  <span className="icon-chip mb-5">
+                    <MapPin size={18} strokeWidth={2} />
+                  </span>
+                  <h3 className="card-title">{card.region}</h3>
+                  <p className="mt-3 text-[0.82rem] leading-[1.75] text-fg-muted">{card.point}</p>
+                </article>
               </Stagger.Item>
             ))}
           </Stagger>
 
           <Reveal as="up" delay={0.1}>
-            <div className="mt-10 flex flex-col gap-6 border-t border-navy/10 pt-10 md:flex-row md:items-start">
-              <TrendingUp className="h-6 w-6 shrink-0 text-premier-cyan" strokeWidth={1.75} />
+            <div className="mt-10 flex flex-col gap-5 border-t border-line pt-10 md:flex-row md:items-start">
+              <span className="icon-chip icon-chip-blue shrink-0">
+                <TrendingUp size={18} strokeWidth={2} />
+              </span>
               <div>
-                <h3 className="font-display text-lg text-navy">Target forecast &amp; aim</h3>
-                <p className="mt-2 max-w-2xl text-[0.98rem] leading-relaxed text-charcoal/75">
+                <h3 className="card-title">Target forecast &amp; aim</h3>
+                <p className="mt-3 max-w-2xl text-[0.85rem] leading-[1.8] text-fg-muted">
                   {targetForecastPoint} Our aim is to stay competitive with new strategies and
-                  approaches, and to remain a competent, dependable partner to every client we work
-                  with.
+                  approaches, and to remain a competent, dependable partner to every client we
+                  work with.
                 </p>
               </div>
             </div>
-          </Reveal>
-        </Container>
-      </section>
-
-      {/* 11 — 15 YEARS OF QUALITY */}
-      <section className="relative overflow-hidden bg-navy py-24 md:py-32">
-        <div className="pointer-events-none absolute left-1/2 top-0 h-[500px] w-[500px] -translate-x-1/2 rounded-full bg-premier-green/15 blur-3xl" />
-        <Container className="relative flex flex-col items-center text-center">
-          <Award className="h-9 w-9 text-premier-cyan" strokeWidth={1.5} />
-          <Reveal as="up" delay={0.08}>
-            <p className="mt-6 font-display text-[5rem] leading-none text-paper md:text-[7rem]">15</p>
-          </Reveal>
-          <Reveal as="up" delay={0.14}>
-            <h2 className="mt-4 font-display text-2xl text-paper md:text-3xl">Years of Quality</h2>
-          </Reveal>
-          <Reveal as="up" delay={0.2}>
-            <p className="mt-5 max-w-lg text-[0.98rem] leading-relaxed text-paper/60">
-              Placeholder section — replace with the original &ldquo;15 Years of Quality&rdquo;
-              copy and visual concept from the existing premierfashionvn.com site. Keep the
-              figure as 15; do not update it to a newer number.
-            </p>
-          </Reveal>
-          <Reveal as="up" delay={0.26} className="mt-10 w-full max-w-3xl">
-            <ImageReveal
-              aspect="aspect-[16/6]"
-              label="15 Years of Quality — badge / certification visual from existing site"
-              className="border border-paper/10"
-            />
           </Reveal>
         </Container>
       </section>

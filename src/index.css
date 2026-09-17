@@ -185,6 +185,29 @@
     color: var(--fg-muted);
   }
 
+    /* ---------- MARQUEE ----------
+     Track holds the items twice; translating -50% lands exactly on the
+     duplicate, so the loop is seamless. */
+  .marquee {
+    position: relative;
+    overflow: hidden;
+  }
+  .marquee-track {
+    display: flex;
+    width: max-content;
+    animation: marquee-scroll 32s linear infinite;
+  }
+  .marquee:hover .marquee-track { animation-play-state: paused; }
+
+  @keyframes marquee-scroll {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .marquee-track { animation: none; }
+  }
+
   /* ---------- 5. PHOTO PAGE HEADER ----------
      Set the image with an inline style:
        <section className="surface-media page-header"
@@ -214,6 +237,11 @@
   }
   @media (min-width: 768px) {
     .page-header { padding-bottom: 7rem; }
+  }
+
+    .page-header-compact { min-height: 56vh; padding-top: 8rem; }
+  @media (min-width: 768px) {
+    .page-header-compact { min-height: 60vh; }
   }
 
   .hero-title {
@@ -294,52 +322,45 @@
 
   .lede { font-size: 1rem; line-height: 1.7; color: var(--fg-muted); }
 
-  /* ---------- 7. CARDS ---------- */
+    /* ---------- 7. CARDS ---------- */
   .card {
     position: relative;
-    overflow: hidden;
     background-color: #FFFFFF;
     border: 1px solid var(--line);
-    padding: 1.75rem;
-    transition: border-color 0.25s, box-shadow 0.25s;
+    padding: 1.6rem;
+    transition:
+      transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+      box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+      border-color 0.3s ease,
+      background-color 0.3s ease;
   }
-
-  /* flat green edge wipes in on hover */
-  .card::before {
-    content: "";
-    position: absolute;
-    inset: 0 0 auto 0;
-    height: 2px;
-    background-color: #7CB715;
-    transform: scaleX(0);
-    transform-origin: left;
-    transition: transform 0.35s ease;
-  }
-  .card:hover::before { transform: scaleX(1); }
   .card:hover {
-    border-color: #C9D2D8;
-    box-shadow: 0 12px 34px -20px rgb(11 115 181 / 0.35);
+    transform: translateY(-6px);
+    border-color: #7CB715;
+    background-color: #FCFDFA;
+    box-shadow:
+      0 18px 40px -22px rgb(11 115 181 / 0.40),
+      0 4px 12px -6px rgb(27 42 59 / 0.12);
   }
 
   .card-index {
     position: absolute;
     top: 1rem;
-    right: 1.25rem;
+    right: 1.15rem;
     font-size: 0.7rem;
     font-weight: 500;
     color: var(--fg-subtle);
   }
 
-  /* small square icon holder — flat green */
-  .icon-chip {
-    display: grid;
-    place-items: center;
-    width: 2.75rem;
-    height: 2.75rem;
-    color: #FFFFFF;
-    background-color: #7CB715;
+  /* on blue surfaces the card inverts */
+  .surface-blue .card {
+    background-color: rgb(255 255 255 / 0.06);
+    border-color: var(--line);
   }
-  .icon-chip-blue { background-color: #0B73B5; }
+  .surface-blue .card:hover {
+    background-color: rgb(255 255 255 / 0.10);
+    box-shadow: 0 18px 40px -22px rgb(0 0 0 / 0.45);
+  }
 
     /* ---------- 8. BUTTONS ----------
      Fill wipes up from the bottom using an inset box-shadow, so it
