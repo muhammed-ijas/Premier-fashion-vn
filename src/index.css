@@ -223,7 +223,23 @@
     content: "";
     position: absolute;
     inset: 0;
-    background-color: var(--hero-overlay);
+    /* functional scrim, not a decorative gradient: keeps the headline
+       legible on the left while the subject stays clear on the right */
+        background-image: linear-gradient(
+      100deg,
+      rgb(8 14 20 / 0.94) 0%,
+      rgb(8 14 20 / 0.88) 30%,
+      rgb(8 14 20 / 0.55) 55%,
+      rgb(8 14 20 / 0.18) 75%,
+      rgb(8 14 20 / 0.06) 100%
+    );
+  }
+
+  /* phones: text sits over the middle, so it needs an even wash */
+  @media (max-width: 767px) {
+    .surface-media::before {
+      background-image: none;
+      background-color: rgb(8 14 20 / 0.72);    }
   }
   .surface-media > * { position: relative; z-index: 1; }
 

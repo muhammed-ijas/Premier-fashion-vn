@@ -294,9 +294,7 @@ export const careers = {
 export const navigation = [
   { name: "Home", path: "/" },
   { name: "About Us", path: "/about" },
-  { name: "Products", path: "/products" },
-  { name: "Services", path: "/services" },
+  { name: "Products & Services", path: "/products-and-services" },
   { name: "Clients", path: "/clients" },
-  { name: "Careers", path: "/careers" },
   { name: "Contact Us", path: "/contact" },
 ];
