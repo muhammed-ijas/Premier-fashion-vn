@@ -42,7 +42,7 @@ export default function Button({
     );
 
   const motionProps = {
-    whileHover: variant === "ghost" ? undefined : { y: -2 },
+    whileHover: undefined,
     whileTap: { scale: 0.98 },
     transition: { duration: DURATION.fast, ease: EASE },
   };

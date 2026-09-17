@@ -1,72 +1,86 @@
+import { MapPin } from "lucide-react";
 import Container from "../Container";
-import SectionHeading from "../SectionHeading";
 import Stagger from "../Stagger";
+import Reveal from "../Reveal";
 import Button from "../Button";
-import { offices, additionalPresence } from "../../data/company";
+import { offices, additionalPresence, company } from "../../data/company";
 
 export default function GlobalPresence() {
   const totalLocations = offices.length + additionalPresence.length;
 
+  const stats = [
+    { value: totalLocations, label: "Countries" },
+    { value: offices.length, label: "Offices & facilities" },
+    { value: company.founded, label: "Established" },
+  ];
+
   return (
-    <section className="bg-paper-warm py-24 md:py-32">
+    <section className="surface-sky py-20 md:py-28">
       <Container>
-        <div className="grid grid-cols-1 gap-16 lg:grid-cols-[0.9fr_1.1fr]">
-          <div>
-            <SectionHeading
-              kicker="Global operations"
-              title="A network built across Asia, Africa and the US."
-              accent="burgundy"
-              lede="Design, sourcing, and production span Premier's facilities and marketing offices worldwide."
-            />
-            <p className="mt-8 font-display text-5xl text-navy">
-              {totalLocations}
-              <span className="ml-3 align-top text-sm font-sans font-normal text-charcoal/50">
-                countries
-              </span>
-            </p>
-            <div className="mt-9">
-              <Button to="/contact" variant="secondary">
-                View all offices
-              </Button>
-            </div>
-          </div>
+        <Reveal as="up" className="mx-auto max-w-2xl text-center">
+          <p className="eyebrow eyebrow-plain mb-4">Worldwide reach</p>
+          <h2 className="section-title-dark text-balance">Global presence</h2>
+          <p className="mt-5 text-[0.98rem] leading-[1.75] text-fg-muted">
+            Design, sourcing and production span Premier&rsquo;s facilities and marketing
+            offices worldwide.
+          </p>
+        </Reveal>
 
-          <div className="space-y-10">
-            <Stagger className="grid grid-cols-1 gap-x-6 gap-y-6 sm:grid-cols-2">
-              {offices.map((office) => (
-                <Stagger.Item
-                  key={office.country}
-                  as="up"
-                  className="border-b border-navy/15 pb-4"
-                >
-                  <p className="font-display text-lg text-navy">{office.country}</p>
-                  <p className="mt-1 text-xs tracking-wide text-charcoal/50">
-                    {office.function}
-                  </p>
-                </Stagger.Item>
-              ))}
-            </Stagger>
+        <Stagger className="mx-auto mt-12 grid max-w-3xl grid-cols-3 gap-6">
+          {stats.map((stat) => (
+            <Stagger.Item key={stat.label} as="up" className="text-center">
+              <p className="text-3xl font-bold leading-none text-blue md:text-4xl">
+                {stat.value}
+              </p>
+              <p className="mt-3 text-[0.68rem] font-medium uppercase tracking-[0.1em] text-fg-subtle">
+                {stat.label}
+              </p>
+            </Stagger.Item>
+          ))}
+        </Stagger>
 
-            {additionalPresence.length > 0 && (
-              <div>
-                <p className="mb-4 text-xs tracking-wide text-charcoal/45">
-                  Additional presence
+        <Stagger className="mt-16 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {offices.map((office) => (
+            <Stagger.Item key={office.country} as="up" className="h-full">
+              <article className="card h-full">
+                <span className="icon-chip mb-5">
+                  <MapPin size={18} strokeWidth={2} />
+                </span>
+                <h3 className="card-title">{office.country}</h3>
+                <p className="mt-2 text-[0.8rem] font-medium uppercase tracking-[0.08em] text-blue">
+                  {office.label}
                 </p>
-                <Stagger className="flex flex-wrap gap-x-8 gap-y-3">
-                  {additionalPresence.map((country) => (
-                    <Stagger.Item
-                      key={country}
-                      as="fade"
-                      className="font-display text-base text-navy/70"
-                    >
-                      {country}
-                    </Stagger.Item>
-                  ))}
-                </Stagger>
-              </div>
-            )}
-          </div>
-        </div>
+                <p className="mt-3 text-[0.9rem] leading-[1.7] text-fg-muted">
+                  {office.function}
+                </p>
+              </article>
+            </Stagger.Item>
+          ))}
+        </Stagger>
+
+        {additionalPresence.length > 0 && (
+          <Reveal as="up" className="mt-12 border-t border-line pt-8 text-center">
+            <p className="mb-5 text-[0.68rem] font-medium uppercase tracking-[0.12em] text-fg-subtle">
+              Additional presence
+            </p>
+            <ul className="flex flex-wrap items-center justify-center gap-x-10 gap-y-3">
+              {additionalPresence.map((country) => (
+                <li
+                  key={country}
+                  className="text-[0.95rem] font-medium uppercase tracking-[0.06em] text-ink"
+                >
+                  {country}
+                </li>
+              ))}
+            </ul>
+          </Reveal>
+        )}
+
+        <Reveal as="up" className="mt-12 text-center">
+          <Button to="/contact" variant="outline">
+            View all offices
+          </Button>
+        </Reveal>
       </Container>
     </section>
   );

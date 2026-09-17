@@ -1,3 +1,4 @@
+import { Mail, Phone, ArrowRight } from "lucide-react";
 import Container from "../Container";
 import Reveal from "../Reveal";
 import Button from "../Button";
@@ -7,36 +8,48 @@ export default function CTASection() {
   const headOffice = offices.find((o) => o.country === "Vietnam");
 
   return (
-    <section className="relative overflow-hidden bg-navy py-24 md:py-32">
-      {/* quiet gradient field, matching Hero — ties navy sections together site-wide */}
-      <div className="pointer-events-none absolute inset-0">
-        <div className="absolute -left-24 bottom-0 h-[420px] w-[420px] rounded-full bg-premier-cyan/15 blur-[120px]" />
-        <div className="absolute -right-16 top-0 h-[360px] w-[360px] rounded-full bg-premier-green/15 blur-[120px]" />
-      </div>
+    <section className="surface-light py-20 md:py-24">
+      <Container>
+        <Reveal
+          as="up"
+          className="flex flex-col items-start justify-between gap-10 border-t-2 border-green pt-12 lg:flex-row lg:items-end"
+        >
+          <div className="max-w-xl">
+            <p className="eyebrow mb-4">Get started</p>
+            <h2 className="section-title text-balance">
+              Ready to bring your next collection to life?
+            </h2>
+            <p className="mt-5 text-[0.98rem] leading-[1.75] text-fg-muted">
+              Share your vision and our design, sourcing and production teams will take it
+              from concept to shipment.
+            </p>
+          </div>
 
-      <Container className="relative flex flex-col items-start justify-between gap-10 border-t border-paper/15 pt-16 lg:flex-row lg:items-end">
-        <Reveal as="up" className="max-w-xl">
-          <h2 className="text-balance font-display text-[2.25rem] leading-[1.1] text-paper md:text-[2.75rem]">
-            Ready to bring your next collection to life?
-          </h2>
-          <p className="mt-5 text-[1.02rem] leading-relaxed text-paper/65">
-            Share your vision and our design, sourcing and production teams will take it
-            from concept to shipment.
-          </p>
-        </Reveal>
+          <div className="flex flex-col items-start gap-6">
+            {/* the one green CTA on this page */}
+            <Button to="/contact" variant="green">
+              Start a conversation
+              <ArrowRight size={15} strokeWidth={2} />
+            </Button>
 
-        <Reveal as="up" delay={0.1} className="flex flex-col items-start gap-5 sm:flex-row sm:items-center">
-          <Button to="/contact" variant="light">
-            Start a conversation
-          </Button>
-          {headOffice?.email && (
-            <a
-              href={`mailto:${headOffice.email}`}
-              className="text-[0.95rem] text-paper/60 underline-offset-4 transition-colors duration-300 hover:text-paper hover:underline"
-            >
-              {headOffice.email}
-            </a>
-          )}
+            <div className="space-y-2.5">
+              {headOffice?.email && (
+                <a
+                  href={`mailto:${headOffice.email}`}
+                  className="flex items-center gap-2.5 text-[0.9rem] text-fg-muted transition-colors duration-300 hover:text-blue"
+                >
+                  <Mail size={15} strokeWidth={1.9} className="shrink-0 text-green" />
+                  {headOffice.email}
+                </a>
+              )}
+              {headOffice?.phone && (
+                <p className="flex items-center gap-2.5 text-[0.9rem] text-fg-muted">
+                  <Phone size={15} strokeWidth={1.9} className="shrink-0 text-green" />
+                  {headOffice.phone}
+                </p>
+              )}
+            </div>
+          </div>
         </Reveal>
       </Container>
     </section>

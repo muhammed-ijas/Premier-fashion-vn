@@ -1,116 +1,108 @@
 @import "tailwindcss";
 
 /* ============================================================
-   PREMIER FASHION — DESIGN SYSTEM  (v7)
+   PREMIER FASHION — PREMIER GROUP HOUSE STYLE
+
+   Colours sampled from the existing Premier Group sites:
+     blue #0B73B5   green #7CB715   cyan #1CB7E0
+     page #F4F4F5   tint #F0F9FF
+
+   Poppins throughout. Flat colour only — no gradients anywhere.
+   Page headers use a photograph with a flat dark overlay.
 
    Components never name a colour. A section declares what it is
-   (surface-light / surface-tint / surface-dark) and everything
-   inside — text, headings, rules, borders, buttons — reads the
-   right value from that surface.
+   (surface-light / surface-tint / surface-blue / surface-media)
+   and the text, rules, cards and buttons inside follow from it.
 
-   Ground is navy for now. To retheme later, edit PALETTE plus the
-   hex values marked GROUND below (@theme and .surface-dark can't
-   read the palette vars — see the note in section 2).
-
-   Why the role utilities in section 6 are hand-written rather than
-   declared in @theme: a property declared as
-   --color-fg-muted: var(--fg-muted) computes at :root and inherits
-   that computed result, so a later surface override never reaches
-   it. Pointing the utility straight at var(--fg-muted) resolves at
-   the element instead, which is what makes surfaces work.
+   Green is the mark that draws the eye — eyebrows, the nav
+   underline, icon squares, bullets, card hover edges, one button
+   per screen. Blue is structural — headings, footer, primary fills.
    ============================================================ */
 
 /* ---------- 1. PALETTE ---------- */
 :root {
-  /* GROUND — navy */
-  --c-ground: #092B3A;
-  --c-ground-deep: #051C27;
-  --c-ground-mid: #123F4B;
-  --c-grad-1: #072433;
-  --c-grad-2: #0C3A4B;
-  --c-grad-3: #0A5A7F;
+  --c-blue: #0B73B5;
+  --c-blue-deep: #085B8F;
+  --c-blue-light: #1B85C8;
+  --c-green: #7CB715;
+  --c-green-deep: #5E8C10;
+  --c-green-light: #B2D576;
+  --c-cyan: #1CB7E0;
 
-  /* brand */
-  --c-blue: #0870B0;
-  --c-blue-deep: #065A8D;
-  --c-cyan: #2096CA;
-  --c-green: #55B52B;
-  --c-green-deep: #3F8A1E;
-  --c-green-light: #B4D298;
-  --c-lime: #8FBE13;
+  --c-white: #FFFFFF;
+  --c-gray-100: #F4F4F5;
+  --c-tint: #F0F9FF;
+  --c-border: #E2E7EA;
+  --c-ink: #1B2A3B;
+  --c-body: #5A6B76;
 
-  /* neutrals */
-  --c-paper: #F7F8F5;
-  --c-mist: #EEF2F1;
-  --c-charcoal: #263238;
-  --c-ink: #12191D;
-
-  --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E");
+  /* flat overlay used over hero photography */
+  --hero-overlay: rgb(18 26 34 / 0.58);
 }
 
 /* ---------- 2. STATIC TOKENS ----------
-   Literal hex only. @theme cannot reference the palette vars above:
-   Tailwind needs a resolvable value at build time, and var() here
-   would also freeze at :root. Keep these in sync with PALETTE. */
+   Literal hex only — @theme needs build-time values. */
 @theme {
-  /* GROUND */
-  --color-ground: #092B3A;
-  --color-ground-deep: #051C27;
-  --color-ground-mid: #123F4B;
-
-  --color-paper: #F7F8F5;
-  --color-mist: #EEF2F1;
-  --color-charcoal: #263238;
-  --color-ink: #12191D;
-  --color-brand-blue: #0870B0;
-  --color-brand-blue-deep: #065A8D;
-  --color-brand-cyan: #2096CA;
-  --color-brand-green: #55B52B;
-  --color-brand-green-deep: #3F8A1E;
-  --color-brand-green-light: #B4D298;
-  --color-brand-lime: #8FBE13;
+  --color-blue: #0B73B5;
+  --color-blue-deep: #085B8F;
+  --color-blue-light: #1B85C8;
+  --color-green: #7CB715;
+  --color-green-deep: #5E8C10;
+  --color-green-light: #B2D576;
+  --color-cyan: #1CB7E0;
+  --color-page: #F4F4F5;
+  --color-tint: #F0F9FF;
+  --color-ink: #1B2A3B;
+  --color-body: #5A6B76;
+  --color-hairline: #E2E7EA;
 
   /* Legacy names — unmigrated components keep working.
      Delete this block once nothing references them. */
-  --color-navy: #092B3A;
-  --color-navy-deep: #051C27;
-  --color-navy-mid: #123F4B;
-  --color-teal-deep: #0A5A7F;
-  --color-premier-blue: #0870B0;
-  --color-premier-cyan: #2096CA;
-  --color-premier-cyan-light: #4FB0DC;
-  --color-premier-green: #55B52B;
-  --color-premier-green-light: #B4D298;
-  --color-light-green: #B4D298;
-  --color-paper-warm: #EEF2F1;
-  --color-burgundy: #3F8A1E;
+  --color-navy: #0B73B5;
+  --color-navy-deep: #085B8F;
+  --color-navy-mid: #1B85C8;
+  --color-paper: #FFFFFF;
+  --color-paper-warm: #F4F4F5;
+  --color-mist: #F4F4F5;
+  --color-charcoal: #5A6B76;
+  --color-ground: #0B73B5;
+  --color-ground-deep: #085B8F;
+  --color-premier-blue: #0B73B5;
+  --color-premier-cyan: #1CB7E0;
+  --color-premier-cyan-light: #5DC7F5;
+  --color-premier-green: #7CB715;
+  --color-premier-green-light: #B2D576;
+  --color-light-green: #B2D576;
+  --color-brand-blue: #0B73B5;
+  --color-brand-cyan: #1CB7E0;
+  --color-brand-green: #7CB715;
+  --color-burgundy: #5E8C10;
 
-  --font-display: "Fraunces", "Iowan Old Style", Georgia, serif;
-  --font-sans: "Manrope", "Inter", -apple-system, sans-serif;
+  --font-sans: "Poppins", system-ui, -apple-system, sans-serif;
+  --font-display: "Poppins", system-ui, -apple-system, sans-serif;
 }
 
 /* ---------- 3. DEFAULT SURFACE ROLES (light) ----------
-   Inside @layer base so surface classes can override them.
-   Unlayered :root rules would outrank @layer components. */
+   In @layer base so surface classes can override them. */
 @layer base {
   :root {
-    --fg: #263238;
-    --fg-muted: rgb(38 50 56 / 0.80);
-    --fg-subtle: rgb(38 50 56 / 0.58);
-    --line: rgb(38 50 56 / 0.14);
-    --line-strong: rgb(38 50 56 / 0.28);
-    --accent: #3F8A1E;
-    --accent-soft: #55B52B;
-    --surface: #F7F8F5;
+    --fg: #1B2A3B;
+    --fg-muted: #5A6B76;
+    --fg-subtle: #8C99A2;
+    --line: #E2E7EA;
+    --line-strong: #C9D2D8;
+    --accent: #7CB715;
+    --accent-alt: #0B73B5;
+    --surface: #FFFFFF;
     --surface-raised: #FFFFFF;
 
-    --btn-solid-bg: #092B3A;          /* GROUND */
-    --btn-solid-fg: #F7F8F5;
-    --btn-solid-bg-hover: #065A8D;
-    --btn-outline-fg: #263238;
-    --btn-outline-bd: rgb(38 50 56 / 0.28);
-    --btn-outline-bg-hover: #092B3A;  /* GROUND */
-    --btn-outline-fg-hover: #F7F8F5;
+    --btn-solid-bg: #0B73B5;
+    --btn-solid-fg: #FFFFFF;
+    --btn-solid-bg-hover: #085B8F;
+    --btn-outline-fg: #0B73B5;
+    --btn-outline-bd: #0B73B5;
+    --btn-outline-bg-hover: #0B73B5;
+    --btn-outline-fg-hover: #FFFFFF;
   }
 
   * { border-color: var(--line); }
@@ -118,22 +110,23 @@
 
   body {
     background-color: var(--surface);
-    color: var(--fg);
+    color: var(--fg-muted);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
   }
 
   h1, h2, h3, h4 {
-    font-family: var(--font-display);
-    font-weight: 500;
+    font-family: var(--font-sans);
+    font-weight: 600;
     letter-spacing: -0.01em;
+    line-height: 1.15;
     color: var(--fg);
   }
 
-  ::selection { background-color: #092B3A; color: #F7F8F5; }  /* GROUND */
+  ::selection { background-color: #0B73B5; color: #FFFFFF; }
   a, button { -webkit-tap-highlight-color: transparent; }
-  :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+  :focus-visible { outline: 2px solid #7CB715; outline-offset: 3px; }
 
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after {
@@ -149,138 +142,330 @@
 @layer components {
   .surface-light,
   .surface-tint,
+  .surface-sky,
+  .surface-blue,
   .surface-dark,
-  .surface-dark-alt,
-  .surface-mesh {
+  .surface-media {
     position: relative;
-    isolation: isolate;
     background-color: var(--surface);
-    color: var(--fg);
+    color: var(--fg-muted);
   }
 
-  .surface-light { --surface: #F7F8F5; }
+  .surface-light { --surface: #FFFFFF; }
 
-  .surface-tint {
-    --surface: #EEF2F1;
-    --surface-raised: #F7F8F5;
-  }
+  /* flat light-gray band between white sections */
+  .surface-tint { --surface: #F4F4F5; }
 
+  /* very pale blue band — flat, no gradient */
+  .surface-sky { --surface: #F0F9FF; }
+
+  /* solid Premier Blue — footer, CTA bands.
+     surface-dark is an alias so unmigrated bg-navy sections work. */
+  .surface-blue,
   .surface-dark,
-  .surface-dark-alt {
-    --fg: #F7F8F5;
-    --fg-muted: rgb(247 248 245 / 0.82);
-    --fg-subtle: rgb(247 248 245 / 0.62);
-    --line: rgb(247 248 245 / 0.16);
-    --line-strong: rgb(247 248 245 / 0.34);
-    --accent: #B4D298;
-    --accent-soft: #2096CA;
-    --surface: #092B3A;               /* GROUND */
-    --surface-raised: #123F4B;        /* GROUND */
+  .surface-media {
+    --fg: #FFFFFF;
+    --fg-muted: rgb(255 255 255 / 0.85);
+    --fg-subtle: rgb(255 255 255 / 0.65);
+    --line: rgb(255 255 255 / 0.22);
+    --line-strong: rgb(255 255 255 / 0.40);
+    --accent: #7CB715;
+    --accent-alt: #FFFFFF;
+    --surface: #0B73B5;
+    --surface-raised: #1B85C8;
 
-    --btn-solid-bg: #F7F8F5;
-    --btn-solid-fg: #092B3A;          /* GROUND */
-    --btn-solid-bg-hover: #B4D298;
-    --btn-outline-fg: #F7F8F5;
-    --btn-outline-bd: rgb(247 248 245 / 0.34);
-    --btn-outline-bg-hover: #F7F8F5;
-    --btn-outline-fg-hover: #092B3A;  /* GROUND */
+    --btn-solid-bg: #7CB715;
+    --btn-solid-fg: #FFFFFF;
+    --btn-solid-bg-hover: #5E8C10;
+    --btn-outline-fg: #FFFFFF;
+    --btn-outline-bd: rgb(255 255 255 / 0.55);
+    --btn-outline-bg-hover: #FFFFFF;
+    --btn-outline-fg-hover: #0B73B5;
 
-    background-image: linear-gradient(
-      135deg,
-      var(--c-grad-1) 0%,
-      var(--c-grad-2) 45%,
-      var(--c-grad-3) 100%
-    );
+    color: var(--fg-muted);
   }
 
-  /* Reversed, so two dark sections in a row don't look identical */
-  .surface-dark-alt {
-    background-image: linear-gradient(
-      315deg,
-      var(--c-grad-1) 0%,
-      var(--c-grad-2) 45%,
-      var(--c-grad-3) 100%
-    );
+  /* ---------- 5. PHOTO PAGE HEADER ----------
+     Set the image with an inline style:
+       <section className="surface-media page-header"
+                style={{ backgroundImage: "url(/hero-about.jpg)" }}>
+     Falls back to solid Premier Blue if the image is missing. */
+  .surface-media {
+    background-color: #0B73B5;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
   }
-
-  .surface-dark::after,
-  .surface-dark-alt::after,
-  .surface-mesh::after {
+  .surface-media::before {
     content: "";
     position: absolute;
     inset: 0;
-    z-index: -1;
-    pointer-events: none;
-    background-image: var(--grain);
-    background-size: 180px 180px;
-    opacity: 0.28;                    /* 0.18 subtle — 0.40 heavy */
-    mix-blend-mode: overlay;
+    background-color: var(--hero-overlay);
+  }
+  .surface-media > * { position: relative; z-index: 1; }
+
+   .page-header {
+    display: flex;
+    align-items: flex-end;
+    min-height: 100vh;
+    min-height: 100svh;   /* mobile: ignores the address bar */
+    padding-top: 9rem;
+    padding-bottom: 5rem;
+  }
+  @media (min-width: 768px) {
+    .page-header { padding-bottom: 7rem; }
   }
 
-  /* Light mesh alternative, if a hero should go pale */
-  .surface-mesh {
-    --surface: #F7F8F5;
-    background-image:
-      radial-gradient(48% 55% at 12% 18%, #DCE9D1 0%, transparent 62%),
-      radial-gradient(52% 48% at 78% 12%, #C8E3F0 0%, transparent 65%),
-      radial-gradient(45% 60% at 92% 72%, #AFD0E5 0%, transparent 68%),
-      radial-gradient(55% 50% at 38% 92%, #E7F0DF 0%, transparent 70%);
+  .hero-title {
+    font-size: clamp(2.1rem, 5.2vw, 4rem);
+    font-weight: 700;
+    line-height: 1.08;
+    letter-spacing: -0.01em;
+    text-transform: uppercase;
+    color: #FFFFFF;
   }
-  .surface-mesh::after { opacity: 0.22; mix-blend-mode: soft-light; }
 
-  /* Panel that inverts out of whichever surface it sits on */
-  .panel-invert {
-    background-color: var(--surface-raised);
+  .breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 0.85rem;
+    color: rgb(255 255 255 / 0.75);
+  }
+  .breadcrumb a { transition: color 0.25s; }
+  .breadcrumb a:hover { color: #7CB715; }
+  .breadcrumb span[aria-current] { color: #FFFFFF; }
+
+  /* ---------- 6. TYPE PATTERNS ---------- */
+
+  /* small uppercase green line above a section title */
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  .eyebrow::before {
+    content: "";
+    width: 1.75rem;
+    height: 2px;
+    background-color: var(--accent);
+  }
+  .eyebrow-plain::before { display: none; }
+
+  /* blue uppercase section heading */
+  .section-title {
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    text-transform: uppercase;
+    color: var(--accent-alt);
+    font-size: clamp(1.6rem, 3vw, 2.25rem);
+    line-height: 1.12;
+  }
+
+  /* ink variant, for pale fields */
+  .section-title-dark {
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    text-transform: uppercase;
+    color: var(--fg);
+    font-size: clamp(1.6rem, 3vw, 2.25rem);
+    line-height: 1.12;
+  }
+
+  .surface-blue .section-title,
+  .surface-dark .section-title,
+  .surface-media .section-title,
+  .surface-blue .section-title-dark,
+  .surface-dark .section-title-dark,
+  .surface-media .section-title-dark { color: #FFFFFF; }
+
+  .card-title {
+    font-size: 0.95rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
     color: var(--fg);
   }
-  .surface-dark .panel-invert,
-  .surface-dark-alt .panel-invert {
-    --fg: #263238;
-    --fg-muted: rgb(38 50 56 / 0.78);
-    --line: rgb(38 50 56 / 0.14);
-    background-color: #F7F8F5;
+
+  .lede { font-size: 1rem; line-height: 1.7; color: var(--fg-muted); }
+
+  /* ---------- 7. CARDS ---------- */
+  .card {
+    position: relative;
+    overflow: hidden;
+    background-color: #FFFFFF;
+    border: 1px solid var(--line);
+    padding: 1.75rem;
+    transition: border-color 0.25s, box-shadow 0.25s;
   }
 
-  /* ---------- 5. BUTTONS ---------- */
+  /* flat green edge wipes in on hover */
+  .card::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 2px;
+    background-color: #7CB715;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.35s ease;
+  }
+  .card:hover::before { transform: scaleX(1); }
+  .card:hover {
+    border-color: #C9D2D8;
+    box-shadow: 0 12px 34px -20px rgb(11 115 181 / 0.35);
+  }
+
+  .card-index {
+    position: absolute;
+    top: 1rem;
+    right: 1.25rem;
+    font-size: 0.7rem;
+    font-weight: 500;
+    color: var(--fg-subtle);
+  }
+
+  /* small square icon holder — flat green */
+  .icon-chip {
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    color: #FFFFFF;
+    background-color: #7CB715;
+  }
+  .icon-chip-blue { background-color: #0B73B5; }
+
+    /* ---------- 8. BUTTONS ----------
+     Fill wipes up from the bottom using an inset box-shadow, so it
+     works with plain text children — no wrapper span needed. */
   .btn {
+    position: relative;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 0.5rem;
-    padding: 0.875rem 1.75rem;
-    font-size: 0.95rem;
-    font-weight: 500;
-    letter-spacing: 0.01em;
-    transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+    gap: 0.6rem;
+    padding: 0.85rem 1.7rem;
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    box-shadow: inset 0 0 0 0 transparent;
+    transition:
+      box-shadow 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+      color 0.3s ease,
+      border-color 0.3s ease,
+      background-color 0.3s ease;
   }
+
+  /* arrow icons ease forward on hover */
+  .btn svg {
+    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .btn:hover svg { transform: translateX(4px); }
+
   .btn-solid {
     background-color: var(--btn-solid-bg);
     color: var(--btn-solid-fg);
   }
-  .btn-solid:hover { background-color: var(--btn-solid-bg-hover); }
+  .btn-solid:hover {
+    box-shadow: inset 0 -4rem 0 0 var(--btn-solid-bg-hover);
+  }
+
   .btn-outline {
     border: 1px solid var(--btn-outline-bd);
     color: var(--btn-outline-fg);
   }
   .btn-outline:hover {
-    background-color: var(--btn-outline-bg-hover);
     color: var(--btn-outline-fg-hover);
+    border-color: var(--btn-outline-bg-hover);
+    box-shadow: inset 0 -4rem 0 0 var(--btn-outline-bg-hover);
   }
-  .btn-ghost { color: var(--fg); padding-left: 0; padding-right: 0; }
+
+  .btn-green {
+    background-color: #7CB715;
+    color: #FFFFFF;
+  }
+  .btn-green:hover {
+    box-shadow: inset 0 -4rem 0 0 #5E8C10;
+  }
+
+  /* text link with a green underline growing from the left */
+  .btn-ghost {
+    position: relative;
+    color: var(--accent-alt);
+    padding: 0 0 0.35rem 0;
+    box-shadow: none;
+  }
+  .btn-ghost::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 2px;
+    background-color: #7CB715;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .btn-ghost:hover::after { transform: scaleX(1); }
+  .btn-ghost:hover { color: #7CB715; }
+
+  /* ---------- 9. NAV ----------
+     Underline grows from the centre out to both edges, on hover and
+     when active. transform-origin: center is what does that. */
+  .nav-link {
+    position: relative;
+    padding-bottom: 0.4rem;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--fg);
+    transition: color 0.3s ease;
+  }
+  .nav-link::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 2px;
+    background-color: #7CB715;
+    transform: scaleX(0);
+    transform-origin: center;
+    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .nav-link:hover,
+  .nav-link.is-active { color: #7CB715; }
+  .nav-link:hover::after,
+  .nav-link.is-active::after { transform: scaleX(1); }
+
+  /* over photography the links are white until hovered or active */
+  .nav-over-media .nav-link { color: #FFFFFF; }
+  .nav-over-media .nav-link:hover,
+  .nav-over-media .nav-link.is-active { color: #7CB715; }
 }
 
-/* ---------- 6. ROLE UTILITIES ----------
-   Hand-written on purpose — see the note at the top of this file. */
+/* ---------- 10. ROLE UTILITIES ----------
+   Hand-written rather than declared in @theme: a property written as
+   --color-fg-muted: var(--fg-muted) computes at :root and inherits that
+   computed result, so a surface override would never reach it. */
 @layer utilities {
   .text-fg { color: var(--fg); }
   .text-fg-muted { color: var(--fg-muted); }
   .text-fg-subtle { color: var(--fg-subtle); }
   .text-accent { color: var(--accent); }
+  .text-accent-alt { color: var(--accent-alt); }
 
   .bg-surface { background-color: var(--surface); }
   .bg-surface-raised { background-color: var(--surface-raised); }
   .bg-accent { background-color: var(--accent); }
-  .bg-accent-soft { background-color: var(--accent-soft); }
+  .bg-accent-alt { background-color: var(--accent-alt); }
 
   .border-line { border-color: var(--line); }
   .border-line-strong { border-color: var(--line-strong); }
@@ -291,29 +476,56 @@
 }
 
 /* --------------------------------------------------------
-   MIGRATION MAP — old class → new class
+   MIGRATION MAP
+
+   PAGE HEADERS
+     <section className="surface-media page-header"
+              style={{ backgroundImage: "url(/hero-about.jpg)" }}>
+       <Container>
+         <h1 className="hero-title">…</h1>
+         <p className="mt-5 max-w-xl text-fg-muted">…</p>
+         <nav className="breadcrumb mt-6">…</nav>
+       </Container>
+     </section>
 
    SECTIONS
-     bg-navy ............... surface-dark
-     bg-paper .............. surface-light
-     bg-paper-warm ......... surface-tint
+     bg-navy ............ surface-blue
+     bg-paper ........... surface-light
+     bg-paper-warm ...... surface-tint
+     pale band .......... surface-sky
 
-   TEXT (drop the colour — the surface supplies it)
-     text-navy / text-paper ............ text-fg  (or nothing)
+   TEXT
+     text-navy / text-paper ............ text-fg
      text-charcoal/80 / text-paper/70 .. text-fg-muted
-     text-charcoal/50 / text-paper/60 .. text-fg-subtle
+     text-charcoal/50 .................. text-fg-subtle
+     section kicker .................... .eyebrow          (green)
+     section heading ................... .section-title    (blue)
+                                         .section-title-dark (ink)
 
-   LINES AND ACCENTS
-     border-navy/10 / border-paper/10 .. border-line
-     bg-premier-green / bg-premier-cyan  rule
-     text-premier-green ................ text-accent
+   MARKS, CARDS, BUTTONS
+     border-navy/10 ..... border-line
+     accent span ........ .rule
+     icon square ........ .icon-chip / .icon-chip-blue
+     card wrapper ....... .card  (+ .card-index for 01/02)
+     nav item ........... .nav-link  (+ .is-active when active)
+     primary ............ btn btn-solid
+     outlined ........... btn btn-outline
+     navbar / green CTA . btn btn-green
 
-   BUTTONS
-     variant="primary" / "light" ....... btn btn-solid
-     variant="secondary" ............... btn btn-outline
-     variant="ghost" ................... btn btn-ghost
+   Button.jsx variants map:
+     primary: "btn btn-solid"     light:  "btn btn-solid"
+     secondary: "btn btn-outline" green:  "btn btn-green"
+     ghost: "btn btn-ghost"
 
-   RETHEMING LATER
-     Change PALETTE, then every hex marked GROUND in sections 2, 3
-     and 4. Nine values total.
+   IMAGES TO DROP IN public/
+     hero-home.jpg, hero-about.jpg, hero-products.jpg,
+     hero-services.jpg, hero-clients.jpg, hero-careers.jpg,
+     hero-contact.jpg
+     Until they exist, page headers show solid Premier Blue.
+
+   CONTRAST
+     green #7CB715 is 2.6:1 on white — eyebrows, rules, icons and
+     button fills only, never body text. Blue #0B73B5 on white is
+     5.0:1 and safe for headings, links and body. The hero overlay
+     is 58% to keep white text above 7:1 on most photography.
    -------------------------------------------------------- */
