@@ -24,9 +24,9 @@
 export const heroes = {
     home: "/hero/home.png",
     about: "/hero/about.png",
-    products: "",   // "/hero/products.jpg"
+    productsServices: "/hero/products-services.png",
     services: "",   // "/hero/services.jpg"
-    clients: "",    // "/hero/clients.jpg"
+    clients: "/hero/clients.png",
     careers: "",    // "/hero/careers.jpg"
     contact: "",    // "/hero/contact.jpg"
 };
@@ -71,7 +71,41 @@ export const careers = {
    trimmed tight. Name each entry with the real client name once
    supplied — do not invent names.
    [{ name: "Client name", logo: "/clients/name.png" }] */
-export const clientLogos = [];
+/* ---------- CLIENT LOGOS ----------
+   Replace each "Client" with the real brand name once known — it becomes
+   the alt text and what buyers and search engines actually read. */
+export const clientLogos = [
+    { name: "Client", logo: "/clients/client-01.png" },
+    { name: "Client", logo: "/clients/client-02.png" },
+    { name: "Client", logo: "/clients/client-03.jpg" },
+    { name: "Client", logo: "/clients/client-04.png" },
+    { name: "Client", logo: "/clients/client-05.png" },
+    { name: "Client", logo: "/clients/client-06.png" },
+    { name: "Client", logo: "/clients/client-07.png" },
+    { name: "Client", logo: "/clients/client-08.png" },
+    { name: "Client", logo: "/clients/client-09.png" },
+    { name: "Client", logo: "/clients/client-10.png" },
+    { name: "Client", logo: "/clients/client-11.jpg" },
+    { name: "Client", logo: "/clients/client-12.png" },
+    { name: "Client", logo: "/clients/client-13.png" },
+    { name: "Client", logo: "/clients/client-14.png" },
+    { name: "Client", logo: "/clients/client-15.jpg" },
+    { name: "Client", logo: "/clients/client-16.png" },
+    { name: "Client", logo: "/clients/client-17.jpg" },
+    { name: "Client", logo: "/clients/client-18.png" },
+    { name: "Client", logo: "/clients/client-19.jpg" },
+    { name: "Client", logo: "/clients/client-20.jpg" },
+    { name: "Client", logo: "/clients/client-21.png" },
+    { name: "Client", logo: "/clients/client-22.jpg" },
+    { name: "Client", logo: "/clients/client-23.png" },
+    { name: "Client", logo: "/clients/client-24.png" },
+    { name: "Client", logo: "/clients/client-25.jpg" },
+    { name: "Client", logo: "/clients/client-26.jpg" },
+    { name: "Client", logo: "/clients/client-27.png" },
+    { name: "Client", logo: "/clients/client-28.jpg" },
+    { name: "Client", logo: "/clients/client-29.jpg" },
+    { name: "Client", logo: "/clients/client-30.jpg" },
+];
 
 /* ---------- HELPER ----------
    Returns true when a path is actually set, so components can pick
